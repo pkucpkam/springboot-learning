@@ -1,0 +1,34 @@
+spring:
+  profiles:
+    active: prod
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  thymeleaf:
+    cache: false
+server:
+  port: 8080
+logging:
+  level:
+    org.springframework: DEBUG
+app:
+  message: Hello from Development!
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  thymeleaf:
+    cache: true
+server:
+  port: 8081
+logging:
+  level:
+    org.springframework: INFO
+app:
+  message: Hello from Production!
