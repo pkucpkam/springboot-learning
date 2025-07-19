@@ -51,15 +51,27 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
+        // Xác thực thông tin đăng nhập
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
+
+        // Lấy role từ danh sách quyền
         String role = authentication.getAuthorities().stream()
-                .map(Object::toString)
+                .map(grantedAuthority -> grantedAuthority.getAuthority())  // Lấy tên role
                 .findFirst()
                 .orElse("ROLE_USER");
+
+        // Tạo token
+        String token = jwtProvider.createToken(request.getUsername(), role);
+
+        // Trả về AuthResponse đầy đủ
         AuthResponse response = new AuthResponse();
-        response.setToken(jwtProvider.createToken(request.getUsername(), role));
+        response.setUsername(request.getUsername());
+        response.setRole(role);
+        response.setToken(token);
+
         return response;
     }
+
 }

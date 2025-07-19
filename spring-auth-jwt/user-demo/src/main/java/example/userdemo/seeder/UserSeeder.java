@@ -16,13 +16,30 @@ import java.util.Set;
 public class UserSeeder implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RoleRepository roleRepository;
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
+        // Tạo ROLE_ADMIN nếu chưa có
+        if (roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
+            Role adminRole = new Role();
+            adminRole.setName("ROLE_ADMIN");
+            roleRepository.save(adminRole);
+        }
+
+        // Tạo ROLE_USER nếu chưa có
+        if (roleRepository.findByName("ROLE_USER").isEmpty()) {
+            Role userRole = new Role();
+            userRole.setName("ROLE_USER");
+            roleRepository.save(userRole);
+        }
+
+        // Tạo admin nếu chưa có
         if (userRepository.findByUsername("admin").isEmpty()) {
             User admin = new User();
             admin.setUsername("admin");
@@ -30,12 +47,30 @@ public class UserSeeder implements CommandLineRunner {
             admin.setEmail("admin@example.com");
 
             Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                    .orElseThrow(() -> new RuntimeException("Role not found"));
+                    .orElseThrow(() -> new RuntimeException("ROLE_ADMIN not found"));
+
             Set<Role> roles = new HashSet<>();
             roles.add(adminRole);
             admin.setRoles(roles);
 
             userRepository.save(admin);
+        }
+
+        // Tạo user thường nếu chưa có
+        if (userRepository.findByUsername("user").isEmpty()) {
+            User user = new User();
+            user.setUsername("user");
+            user.setPassword(passwordEncoder.encode("user123"));
+            user.setEmail("user@example.com");
+
+            Role userRole = roleRepository.findByName("ROLE_USER")
+                    .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
+
+            Set<Role> roles = new HashSet<>();
+            roles.add(userRole);
+            user.setRoles(roles);
+
+            userRepository.save(user);
         }
     }
 }
