@@ -43,8 +43,13 @@ public class UserSeeder implements CommandLineRunner {
         if (userRepository.findByUsername("admin").isEmpty()) {
             User admin = new User();
             admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setName("Admin User");
             admin.setEmail("admin@example.com");
+            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setAddress("123 Admin Street");
+            admin.setPhone("1234567890");
+            admin.setNote(null);
+            admin.setStatus("ACTIVE");
 
             Role adminRole = roleRepository.findByName("ROLE_ADMIN")
                     .orElseThrow(() -> new RuntimeException("ROLE_ADMIN not found"));
@@ -60,8 +65,13 @@ public class UserSeeder implements CommandLineRunner {
         if (userRepository.findByUsername("user").isEmpty()) {
             User user = new User();
             user.setUsername("user");
-            user.setPassword(passwordEncoder.encode("user123"));
+            user.setName("Regular User");
             user.setEmail("user@example.com");
+            user.setPassword(passwordEncoder.encode("user123"));
+            user.setAddress("456 User Avenue");
+            user.setPhone("0987654321");
+            user.setNote("Regular user account");
+            user.setStatus("ACTIVE");
 
             Role userRole = roleRepository.findByName("ROLE_USER")
                     .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));

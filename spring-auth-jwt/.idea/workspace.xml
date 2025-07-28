@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d1e40347-966c-4c6a-876b-9da58378dbb9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/address/controller/AddressController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/address/dto/AddressDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/address/entity/AddressEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/address/repository/AddressRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/address/seeder/AddressSeeder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/address/service/AddressService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/dto/UserRegistrationDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/controller/MessageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/controller/MessageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/dto/ConversationDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/dto/ConversationDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/dto/MessageDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/dto/MessageDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/entity/Conversation.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/entity/Conversation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/entity/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/entity/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/repository/ConversationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/repository/ConversationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/repository/MessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/repository/MessageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/service/ConversationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/service/ConversationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/service/MessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/chat/service/MessageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/dto/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/dto/UserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/security/JwtFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/security/JwtFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/seeder/UserSeeder.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/seeder/UserSeeder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/websocket/WebSocketConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-demo/src/main/java/example/userdemo/websocket/WebSocketConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-test/index.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="30Ux7h5n2UXfBxmwYgf0re5mDBT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "F:/Learning/springboot-practice/spring-auth-jwt/user-demo",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d1e40347-966c-4c6a-876b-9da58378dbb9" name="Changes" comment="" />
+      <created>1753695786807</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1753695786807</updated>
+      <workItem from="1753695787827" duration="8000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

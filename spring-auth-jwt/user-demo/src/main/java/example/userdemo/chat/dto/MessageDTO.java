@@ -1,33 +1,35 @@
 package example.userdemo.chat.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class MessageDTO {
-    private Long id;
+public class MessageDTO implements Serializable {
+    private String id;
     private String content;
     private String sender;
-    private LocalDateTime sentAt;
-    private Long conversationId;
-    private String receiver;
+    private String timestamp; // Đổi sang String để khớp với định dạng yêu cầu
+    private String conversationId;
+    private FileInfo file;
 
     // Constructors
     public MessageDTO() {
     }
 
-    public MessageDTO(Long id, String content, String sender, LocalDateTime sentAt, Long conversationId) {
+    public MessageDTO(String id, String content, String sender, String timestamp, String conversationId, FileInfo file) {
         this.id = id;
         this.content = content;
         this.sender = sender;
-        this.sentAt = sentAt;
+        this.timestamp = timestamp;
         this.conversationId = conversationId;
+        this.file = file;
     }
 
     // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -47,27 +49,69 @@ public class MessageDTO {
         this.sender = sender;
     }
 
-    public LocalDateTime getSentAt() {
-        return sentAt;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setSentAt(LocalDateTime sentAt) {
-        this.sentAt = sentAt;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public Long getConversationId() {
+    public String getConversationId() {
         return conversationId;
     }
 
-    public void setConversationId(Long conversationId) {
+    public void setConversationId(String conversationId) {
         this.conversationId = conversationId;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public FileInfo getFile() {
+        return file;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setFile(FileInfo file) {
+        this.file = file;
+    }
+
+    // Nested FileInfo class
+    public static class FileInfo implements Serializable {
+        private String url;
+        private String name;
+        private String type;
+
+        // Constructors
+        public FileInfo() {
+        }
+
+        public FileInfo(String url, String name, String type) {
+            this.url = url;
+            this.name = name;
+            this.type = type;
+        }
+
+        // Getters and Setters
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
     }
 }

@@ -9,14 +9,17 @@ import java.util.List;
 @Table(name = "conversations")
 public class Conversation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Column
+    private String avatar;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
@@ -25,19 +28,20 @@ public class Conversation {
     public Conversation() {
     }
 
-    public Conversation(Long id, String name, LocalDateTime createdAt, List<Message> messages) {
+    public Conversation(String id, String name, LocalDateTime createdAt, String avatar, List<Message> messages) {
         this.id = id;
         this.name = name;
         this.createdAt = createdAt;
+        this.avatar = avatar;
         this.messages = messages;
     }
 
     // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -55,6 +59,14 @@ public class Conversation {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public List<Message> getMessages() {

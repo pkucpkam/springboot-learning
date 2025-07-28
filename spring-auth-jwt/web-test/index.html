@@ -1,221 +1,177 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App Test</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SockJS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <!-- STOMP.js CDN -->
+    <title>Chat App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <style>
-        #chatArea {
-            height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        .message {
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 5px;
-        }
-        .message.sent {
-            background-color: #d1e7dd;
-            margin-left: 20%;
-        }
-        .message.received {
-            background-color: #f8d7da;
-            margin-right: 20%;
-        }
-        #conversationList {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        .conversation-item {
-            padding: 8px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .conversation-item:hover {
-            background-color: #f0f0f0;
-        }
-        .conversation-item.active {
-            background-color: #e0e7ff;
-            font-weight: bold;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
-        <h1 class="text-2xl font-bold text-center mb-4">Chat App Test</h1>
-        
-        <!-- Sender Input -->
-        <div class="mb-4">
-            <label for="sender" class="block text-sm font-medium text-gray-700">Tên của bạn</label>
-            <input type="text" id="sender" value="TestUser" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+<body class="flex h-screen bg-gray-100">
+    <div id="conversationList" class="w-1/3 bg-white border-r border-gray-200 p-4 overflow-y-auto">
+        <!-- Danh sách cuộc hội thoại sẽ được thêm bằng JS -->
+    </div>
+    <div id="chatArea" class="w-2/3 p-4 flex flex-col">
+        <div id="messages" class="flex-1 bg-white border border-gray-200 rounded-lg p-4 overflow-y-auto mb-4 shadow-sm"></div>
+        <div class="flex gap-2">
+            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="file" id="fileInput" class="p-2 border border-gray-300 rounded-lg">
+            <button onclick="sendMessage()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Gửi</button>
         </div>
-        
-        <!-- Connect/Disconnect Buttons -->
-        <div class="mb-4 flex space-x-2">
-            <button id="connectBtn" onclick="connect()" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Kết nối</button>
-            <button id="disconnectBtn" onclick="disconnect()" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" disabled>Ngắt kết nối</button>
-        </div>
-        
-        <!-- Conversation List -->
-        <div id="conversationList" class="bg-gray-50 rounded-md"></div>
-        
-        <!-- Chat Area -->
-        <div id="chatArea" class="bg-gray-50 rounded-md"></div>
-        
-        <!-- Message Input -->
-        <div class="flex space-x-2">
-            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." class="flex-1 p-2 border border-gray-300 rounded-md" disabled />
-            <button id="sendBtn" onclick="sendMessage()" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600" disabled>Gửi</button>
-        </div>
-        
-        <!-- Status -->
-        <p id="status" class="mt-4 text-sm text-gray-600">Ngắt kết nối</p>
     </div>
 
     <script>
         let stompClient = null;
-        let currentSubscription = null;
-        let currentConversationId = null;
+        let selectedConversationId = null;
 
         function connect() {
+            console.log("Opening Web Socket...");
             const socket = new SockJS('http://localhost:8081/ws');
             stompClient = Stomp.over(socket);
-
             stompClient.connect({}, function (frame) {
-                console.log('Kết nối thành công: ' + frame);
-                document.getElementById('status').textContent = 'Đã kết nối';
-                document.getElementById('connectBtn').disabled = true;
-                document.getElementById('disconnectBtn').disabled = false;
-                document.getElementById('messageInput').disabled = false;
-                document.getElementById('sendBtn').disabled = false;
-
-                // Tải danh sách cuộc hội thoại
+                console.log('Web Socket Opened: ' + frame);
                 loadConversations();
             }, function (error) {
-                console.error('Lỗi kết nối: ' + error);
-                document.getElementById('status').textContent = 'Kết nối thất bại: ' + error;
+                console.error('WebSocket Error: ' + error);
+                setTimeout(connect, 5000); // Thử kết nối lại sau 5 giây
             });
-        }
-
-        function disconnect() {
-            if (stompClient !== null) {
-                if (currentSubscription) {
-                    currentSubscription.unsubscribe();
-                    currentSubscription = null;
-                }
-                stompClient.disconnect();
-                console.log('Ngắt kết nối');
-                document.getElementById('status').textContent = 'Ngắt kết nối';
-                document.getElementById('connectBtn').disabled = false;
-                document.getElementById('disconnectBtn').disabled = true;
-                document.getElementById('messageInput').disabled = true;
-                document.getElementById('sendBtn').disabled = true;
-                document.getElementById('chatArea').innerHTML = '';
-                document.getElementById('conversationList').innerHTML = '';
-            }
-        }
-
-        function selectConversation(conversationId, conversationName) {
-            // Hủy subscription cũ nếu có
-            if (currentSubscription) {
-                currentSubscription.unsubscribe();
-            }
-            currentConversationId = conversationId;
-
-            // Cập nhật giao diện
-            document.getElementById('chatArea').innerHTML = '';
-            document.querySelectorAll('.conversation-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.id === conversationId) {
-                    item.classList.add('active');
-                }
-            });
-
-            // Subscribe vào cuộc hội thoại mới
-            currentSubscription = stompClient.subscribe(`/topic/conversation/${conversationId}`, function (message) {
-                const messageData = JSON.parse(message.body);
-                showMessage(messageData);
-            });
-
-            // Tải lịch sử tin nhắn
-            loadMessageHistory(conversationId);
-        }
-
-        function sendMessage() {
-            const sender = document.getElementById('sender').value;
-            const content = document.getElementById('messageInput').value;
-
-            if (content && stompClient && currentConversationId) {
-                const message = {
-                    content: content,
-                    sender: sender,
-                    conversationId: parseInt(currentConversationId)
-                };
-                stompClient.send('/app/message', {}, JSON.stringify(message));
-                document.getElementById('messageInput').value = '';
-            }
-        }
-
-        function showMessage(message) {
-            const chatArea = document.getElementById('chatArea');
-            const messageElement = document.createElement('div');
-            const isSent = message.sender === document.getElementById('sender').value;
-            messageElement.className = 'message ' + (isSent ? 'sent' : 'received');
-            messageElement.innerHTML = `<strong>${message.sender}</strong> (${new Date(message.sentAt).toLocaleTimeString()}): ${message.content}`;
-            chatArea.appendChild(messageElement);
-            chatArea.scrollTop = chatArea.scrollHeight;
         }
 
         function loadConversations() {
-            fetch('http://localhost:8081/api/messages/conversations')
-                .then(response => response.json())
-                .then(conversations => {
+            fetch('http://localhost:8081/api/conversations')
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to load conversations: ' + response.status);
+                    return response.json();
+                })
+                .then(data => {
                     const conversationList = document.getElementById('conversationList');
                     conversationList.innerHTML = '';
-                    conversations.forEach(conv => {
-                        const convElement = document.createElement('div');
-                        convElement.className = 'conversation-item';
-                        convElement.dataset.id = conv.id;
-                        convElement.innerText = conv.name || `Cuộc hội thoại ${conv.id}`;
-                        convElement.onclick = () => selectConversation(conv.id, conv.name);
-                        conversationList.appendChild(convElement);
+                    data.forEach(conv => {
+                        const div = document.createElement('div');
+                        div.className = 'conversation p-3 rounded-lg hover:bg-gray-100 cursor-pointer transition';
+                        div.dataset.conversationId = conv.id; // Lưu conversationId vào dataset
+                        div.innerHTML = `
+                            <div class="flex items-center gap-3">
+                                <img src="${conv.avatar || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div class="font-semibold text-gray-800">${conv.name}</div>
+                                    <div class="text-sm text-gray-500 truncate">${conv.lastMessage || 'Chưa có tin nhắn'}</div>
+                                </div>
+                            </div>
+                        `;
+                        div.onclick = () => selectConversation(conv.id);
+                        conversationList.appendChild(div);
                     });
-                    // Chọn cuộc hội thoại đầu tiên nếu có
-                    if (conversations.length > 0) {
-                        selectConversation(conversations[0].id, conversations[0].name);
+                    console.log('Loaded conversations:', data);
+                    // Tự động chọn cuộc hội thoại đầu tiên nếu chưa chọn
+                    if (data.length > 0 && !selectedConversationId) {
+                        selectConversation(data[0].id);
                     }
                 })
-                .catch(error => console.error('Lỗi tải danh sách cuộc hội thoại:', error));
+                .catch(error => console.error('Error loading conversations:', error));
         }
 
-        function loadMessageHistory(conversationId) {
-            fetch(`http://localhost:8081/api/messages/conversation/${conversationId}`)
-                .then(response => response.json())
-                .then(messages => {
-                    document.getElementById('chatArea').innerHTML = '';
-                    messages.forEach(showMessage);
-                })
-                .catch(error => console.error('Lỗi tải lịch sử tin nhắn:', error));
-        }
-
-        // Xử lý phím Enter để gửi tin nhắn
-        document.getElementById('messageInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
+        function selectConversation(conversationId) {
+            if (!conversationId) {
+                console.error('Conversation ID is null or undefined');
+                alert('Không thể chọn cuộc hội thoại: ID không hợp lệ');
+                return;
             }
-        });
+            selectedConversationId = conversationId;
+            console.log('Đã chọn cuộc hội thoại: id=' + conversationId);
+            console.log('Đã subscribe vào /topic/conversation/' + conversationId);
+            document.querySelectorAll('.conversation').forEach(div => {
+                div.classList.remove('bg-blue-50', 'border-l-4', 'border-blue-500');
+                if (div.dataset.conversationId === conversationId) {
+                    div.classList.add('bg-blue-50', 'border-l-4', 'border-blue-500');
+                }
+            });
+            // Hủy subscribe cũ nếu có
+            if (stompClient.subscriptions) {
+                Object.keys(stompClient.subscriptions).forEach(subId => {
+                    stompClient.unsubscribe(subId);
+                });
+            }
+            // Subscribe vào kênh mới
+            stompClient.subscribe('/topic/conversation/' + conversationId, function (message) {
+                const messageData = JSON.parse(message.body);
+                console.log('Nhận tin nhắn real-time:', messageData);
+                displayMessage(messageData);
+            });
+            // Tải lịch sử tin nhắn
+            loadMessages(conversationId);
+        }
+
+        function loadMessages(conversationId) {
+            if (!conversationId) {
+                console.error('Cannot load messages: conversationId is null');
+                return;
+            }
+            fetch('http://localhost:8081/api/messages/conversation/' + conversationId)
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to load messages: ' + response.status);
+                    return response.json();
+                })
+                .then(messages => {
+                    const messagesDiv = document.getElementById('messages');
+                    messagesDiv.innerHTML = '';
+                    messages.forEach(msg => displayMessage(msg));
+                    console.log('Loaded messages for conversation ' + conversationId + ':', messages);
+                })
+                .catch(error => console.error('Error loading messages:', error));
+        }
+
+        function displayMessage(message) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message p-2 rounded-lg mb-2 ${message.sender === 'TestUser' ? 'bg-blue-100 ml-auto' : 'bg-gray-100'} max-w-lg`;
+            messageDiv.innerHTML = `
+                <div class="font-semibold text-gray-800">${message.sender}</div>
+                <div class="text-gray-700">${message.content}</div>
+                ${message.file ? `<a class="text-blue-500 underline" href="${message.file.url}" target="_blank">${message.file.name}</a>` : ''}
+                <div class="text-xs text-gray-500">${message.timestamp}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            console.log('Hiển thị tin nhắn:', message);
+        }
+
+        function sendMessage() {
+            if (!selectedConversationId) {
+                console.error('Cannot send message: No conversation selected');
+                alert('Vui lòng chọn một cuộc hội thoại trước khi gửi tin nhắn!');
+                return;
+            }
+            const messageInput = document.getElementById('messageInput');
+            const fileInput = document.getElementById('fileInput');
+            const content = messageInput.value;
+            if (!content) {
+                console.error('Cannot send empty message');
+                alert('Tin nhắn không được để trống!');
+                return;
+            }
+            const message = {
+                content: content,
+                sender: 'TestUser',
+                conversationId: selectedConversationId
+            };
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                message.file = {
+                    url: URL.createObjectURL(file),
+                    name: file.name,
+                    type: file.type
+                };
+            }
+            console.log('Gửi tin nhắn:', message);
+            stompClient.send('/app/message', {}, JSON.stringify(message));
+            messageInput.value = '';
+            fileInput.value = '';
+        }
+
+        // Kết nối WebSocket khi trang tải
+        connect();
     </script>
 </body>
 </html>

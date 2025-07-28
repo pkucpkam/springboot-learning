@@ -2,8 +2,8 @@ package example.userdemo.chat.controller;
 
 import example.userdemo.chat.dto.ConversationDTO;
 import example.userdemo.chat.dto.MessageDTO;
-import example.userdemo.chat.service.MessageService;
 import example.userdemo.chat.service.ConversationService;
+import example.userdemo.chat.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +27,7 @@ public class MessageController {
     }
 
     @GetMapping("/conversation/{conversationId}")
-    public ResponseEntity<List<MessageDTO>> getMessagesByConversationId(@PathVariable Long conversationId) {
+    public ResponseEntity<List<MessageDTO>> getMessagesByConversationId(@PathVariable String conversationId) {
         return ResponseEntity.ok(messageService.getMessagesByConversationId(conversationId));
     }
 
