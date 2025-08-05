@@ -1,12 +1,25 @@
 package com.example.user_review_01.serviceImpl;
 
+import com.example.user_review_01.dto.request.UserLoginRequest;
 import com.example.user_review_01.dto.request.UserRegisterRequest;
+import com.example.user_review_01.dto.response.UserInformationResponse;
+import com.example.user_review_01.dto.response.UserLoginResponse;
 import com.example.user_review_01.dto.response.UserResponse;
+import com.example.user_review_01.entity.RoleEntity;
 import com.example.user_review_01.entity.UserEntity;
 import com.example.user_review_01.mapper.UserMapper;
+import com.example.user_review_01.repository.RoleRepository;
 import com.example.user_review_01.repository.UserRepository;
+import com.example.user_review_01.security.JwtUtil;
 import com.example.user_review_01.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +30,27 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+    @Autowired
+    private  UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper,
-                           PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-    }
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private  UserMapper userMapper;
+
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private  AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
     @Override
     public UserResponse register(UserRegisterRequest request) {
@@ -41,8 +63,61 @@ public class UserServiceImpl implements UserService {
 
         UserEntity user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        RoleEntity userRole = roleRepository.findByRoleName("user")
+                .orElseGet(() -> {
+                    RoleEntity newRole = new RoleEntity("user");
+                    return roleRepository.save(newRole);
+                });
+
+        // Gán vai trò "user" cho người dùng
+        user.addRole(userRole);
+
         user = userRepository.save(user);
         return userMapper.toResponse(user);
+    }
+
+    @Override
+    public UserLoginResponse login(UserLoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Incorrect username or password", e);
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+
+        String jwt = jwtUtil.generateToken(userDetails);
+
+        UserEntity user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserLoginResponse response = userMapper.toLoginResponse(user);
+
+        response.setJwt(jwt);
+
+        return response;
+    }
+
+    @Override
+    public UserInformationResponse getCurrentUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User chưa đăng nhập");
+        }
+
+        String username = authentication.getName();
+
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại" + username));
+
+        return userMapper.toInfoResponse(user);
     }
 
     @Override
@@ -53,9 +128,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> getAllUsers() {
+    public List<UserInformationResponse> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(userMapper::toResponse)
+                .map(userMapper::toInfoResponse)
                 .collect(Collectors.toList());
     }
 

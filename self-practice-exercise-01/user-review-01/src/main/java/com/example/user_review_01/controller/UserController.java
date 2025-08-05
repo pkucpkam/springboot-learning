@@ -1,8 +1,10 @@
 package com.example.user_review_01.controller;
 
 import com.example.user_review_01.dto.request.UserRegisterRequest;
+import com.example.user_review_01.dto.response.UserInformationResponse;
 import com.example.user_review_01.dto.response.UserResponse;
 import com.example.user_review_01.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,21 +15,13 @@ import java.util.UUID;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    @GetMapping("/me")
+    public ResponseEntity<UserInformationResponse> getCurrentUserInfo() {
+        return ResponseEntity.ok(userService.getCurrentUserInfo());
     }
-
-    @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
-        return ResponseEntity.ok(userService.register(request));
-    }
-
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody UserLoginRequest request) {
-//        return ResponseEntity.ok(userService.login(request));
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
@@ -35,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
+    public ResponseEntity<List<UserInformationResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
