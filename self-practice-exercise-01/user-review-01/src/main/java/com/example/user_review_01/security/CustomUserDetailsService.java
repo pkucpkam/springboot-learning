@@ -1,9 +1,8 @@
-package com.example.user_review_01.service;
+package com.example.user_review_01.security;
 
 import com.example.user_review_01.entity.UserEntity;
 import com.example.user_review_01.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
