@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class UserEntity {
-
+@Table(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -27,12 +27,12 @@ public class UserEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<RoleEntity> roles = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
-    public UserEntity() {
+    public User() {
     }
 
-    public UserEntity(String status, String note, String address, String phone, String email, String name, String username, UUID id) {
+    public User(String status, String note, String address, String phone, String email, String name, String username, UUID id) {
         this.status = status;
         this.note = note;
         this.address = address;
@@ -115,19 +115,19 @@ public class UserEntity {
         this.status = status;
     }
 
-    public Set<RoleEntity> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<RoleEntity> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
-    public void addRole(RoleEntity role) {
+    public void addRole(Role role) {
         this.roles.add(role);
     }
 
-    public void removeRole(RoleEntity role) {
+    public void removeRole(Role role) {
         this.roles.remove(role);
     }
 }

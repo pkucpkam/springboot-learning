@@ -5,8 +5,8 @@ import com.example.user_review_01.dto.request.UserRegisterRequest;
 import com.example.user_review_01.dto.response.UserInformationResponse;
 import com.example.user_review_01.dto.response.UserLoginResponse;
 import com.example.user_review_01.dto.response.UserResponse;
-import com.example.user_review_01.entity.RoleEntity;
-import com.example.user_review_01.entity.UserEntity;
+import com.example.user_review_01.entity.Role;
+import com.example.user_review_01.entity.User;
 import com.example.user_review_01.mapper.UserMapper;
 import com.example.user_review_01.repository.RoleRepository;
 import com.example.user_review_01.repository.UserRepository;
@@ -61,12 +61,12 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Email already exists");
         }
 
-        UserEntity user = userMapper.toEntity(request);
+        User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        RoleEntity userRole = roleRepository.findByRoleName("user")
+        Role userRole = roleRepository.findByRoleName("user")
                 .orElseGet(() -> {
-                    RoleEntity newRole = new RoleEntity("user");
+                    Role newRole = new Role("user");
                     return roleRepository.save(newRole);
                 });
 
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
         String jwt = jwtUtil.generateToken(userDetails);
 
-        UserEntity user = userRepository.findByUsername(request.getUsername())
+        User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         UserLoginResponse response = userMapper.toLoginResponse(user);
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
 
         String username = authentication.getName();
 
-        UserEntity user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User không tồn tại" + username));
 
         return userMapper.toInfoResponse(user);
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getUserById(UUID id) {
-        UserEntity user = userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return userMapper.toResponse(user);
     }
@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse updateUser(UUID id, UserRegisterRequest request) {
-        UserEntity user = userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());

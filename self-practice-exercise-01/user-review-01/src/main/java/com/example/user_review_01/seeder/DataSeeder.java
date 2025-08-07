@@ -1,7 +1,7 @@
 package com.example.user_review_01.seeder;
 
-import com.example.user_review_01.entity.RoleEntity;
-import com.example.user_review_01.entity.UserEntity;
+import com.example.user_review_01.entity.Role;
+import com.example.user_review_01.entity.User;
 import com.example.user_review_01.repository.RoleRepository;
 import com.example.user_review_01.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -26,9 +26,9 @@ public class DataSeeder implements CommandLineRunner {
         // Chỉ seed nếu database trống
         if (userRepository.count() == 0 && roleRepository.count() == 0) {
             // Khởi tạo các vai trò
-            RoleEntity userRole = new RoleEntity("user");
-            RoleEntity sellerRole = new RoleEntity("seller");
-            RoleEntity adminRole = new RoleEntity("admin");
+            Role userRole = new Role("user");
+            Role sellerRole = new Role("seller");
+            Role adminRole = new Role("admin");
 
             // Lưu vai trò vào database
             roleRepository.save(userRole);
@@ -36,7 +36,7 @@ public class DataSeeder implements CommandLineRunner {
             roleRepository.save(adminRole);
 
             // Tạo tài khoản Admin
-            UserEntity admin = new UserEntity();
+            User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setName("Administrator");
@@ -49,7 +49,7 @@ public class DataSeeder implements CommandLineRunner {
             admin.addRole(userRole); // Admin cũng có vai trò user
 
             // Tạo tài khoản Regular User
-            UserEntity user = new UserEntity();
+            User user = new User();
             user.setUsername("user");
             user.setPassword(passwordEncoder.encode("user123"));
             user.setName("Regular User");
@@ -61,7 +61,7 @@ public class DataSeeder implements CommandLineRunner {
             user.addRole(userRole);
 
             // Tạo tài khoản Seller
-            UserEntity seller = new UserEntity();
+            User seller = new User();
             seller.setUsername("seller");
             seller.setPassword(passwordEncoder.encode("seller123"));
             seller.setName("Seller User");

@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import java.util.UUID;
 
 @Entity
-public class RoleEntity {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,10 +16,10 @@ public class RoleEntity {
 
     private String roleName;
 
-    public RoleEntity() {
+    public Role() {
     }
 
-    public RoleEntity(String roleName) {
+    public Role(String roleName) {
         this.roleName = roleName;
     }
 
