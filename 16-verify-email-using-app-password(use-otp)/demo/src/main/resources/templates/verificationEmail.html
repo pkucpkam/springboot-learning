@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h2 { color: #333333; }
+        .otp-code { font-size: 24px; font-weight: bold; color: #007bff; letter-spacing: 5px; }
+        .expiry { color: #ff0000; }
+        p { color: #666666; }
+        .footer { font-size: 12px; color: #999999; text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Xác thực tài khoản của bạn</h2>
+    <p>Chào bạn,</p>
+    <p>Bạn đã yêu cầu xác thực tài khoản với email <strong th:text="${email}"></strong>.</p>
+    <p>Mã OTP của bạn là:</p>
+    <div class="otp-code" th:text="${otp}"></div>
+    <p class="expiry">Mã OTP này hết hạn sau <strong th:text="${expiryMinutes}"></strong> phút. Vui lòng nhập mã này vào ứng dụng để xác thực.</p>
+    <p>Nếu bạn không yêu cầu xác thực này, vui lòng bỏ qua email này.</p>
+    <div class="footer">
+        Trân trọng,<br>
+        Đội ngũ ứng dụng của bạn
+    </div>
+</div>
+</body>
+</html>
