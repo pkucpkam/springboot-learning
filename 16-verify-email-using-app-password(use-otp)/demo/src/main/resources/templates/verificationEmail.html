@@ -18,7 +18,10 @@
     <p>Bạn đã yêu cầu xác thực tài khoản với email <strong th:text="${email}"></strong>.</p>
     <p>Mã OTP của bạn là:</p>
     <div class="otp-code" th:text="${otp}"></div>
-    <p class="expiry">Mã OTP này hết hạn sau <strong th:text="${expiryMinutes}"></strong> phút. Vui lòng nhập mã này vào ứng dụng để xác thực.</p>
+    <p class="expiry">
+        Mã OTP này hết hạn sau <strong th:text="${expiryMinutes}"></strong> phút.
+        Vui lòng nhập mã này vào ứng dụng để xác thực.
+    </p>
     <p>Nếu bạn không yêu cầu xác thực này, vui lòng bỏ qua email này.</p>
     <div class="footer">
         Trân trọng,<br>
