@@ -1,0 +1,67 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.likelion'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+ext {
+  versions = [
+    mapstruct : '1.5.5.Final',
+    lombokMapstructBinding: '0.2.0',
+	jarkartaBindingApi: '3.0.1',
+	jjwt: '0.12.6',
+	joseJwt: '9.41'
+  ]
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+	implementation "io.jsonwebtoken:jjwt-api:${versions.jjwt}"
+	implementation "com.nimbusds:nimbus-jose-jwt:${versions.joseJwt}" // to verify Google ID Token
+	implementation "jakarta.xml.bind:jakarta.xml.bind-api:${versions.jarkartaBindingApi}"
+	implementation "jakarta.json.bind:jakarta.json.bind-api:${versions.jarkartaBindingApi}"
+	compileOnly 'org.projectlombok:lombok'
+	compileOnly "org.projectlombok:lombok-mapstruct-binding:${versions.lombokMapstructBinding}"
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly  "io.jsonwebtoken:jjwt-impl:${versions.jjwt}"
+    runtimeOnly  "io.jsonwebtoken:jjwt-jackson:${versions.jjwt}"
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${versions.lombokMapstructBinding}"
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// (Optinal) Turn on verbose to debug MapStruct
+tasks.withType(JavaCompile).configureEach {
+  options.compilerArgs += ['-Amapstruct.verbose=false']
+}

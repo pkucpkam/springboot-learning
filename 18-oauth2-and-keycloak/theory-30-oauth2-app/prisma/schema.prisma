@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid()) @db.VarChar(191)
+  userId            String  @db.VarChar(191)
+  type              String  @db.VarChar(191)
+  provider          String  @db.VarChar(191)
+  providerAccountId String  @db.VarChar(191)
+
+  refresh_token     String? @db.LongText
+  access_token      String? @db.LongText
+  id_token          String? @db.LongText
+
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  session_state     String?
+
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Account_userId_fkey")
+
+  @@map("account")
+  @@unique([provider, providerAccountId], map: "Account_provider_providerAccountId_key")
+  @@index([userId], map: "Account_userId_fkey")
+}
+
+model Customer {
+  id      BigInt @id @default(autoincrement())
+  name    String
+  email   String @unique(map: "Customer_email_key")
+  address String
+
+  @@map("customer")
+}
+
+model Session {
+  id           String   @id @default(cuid()) @db.VarChar(191)
+  sessionToken String   @unique(map: "Session_sessionToken_key") @db.VarChar(191)
+  userId       String   @db.VarChar(191)
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], map: "Session_userId_fkey")
+
+  @@map("session")
+  @@index([userId], map: "Session_userId_fkey")
+}
+
+model User {
+  id            String    @id @default(cuid()) @db.VarChar(191)
+  name          String?
+  email         String?   @unique(map: "User_email_key") @db.VarChar(191)
+  emailVerified DateTime?
+  image         String?
+  account       Account[]
+  session       Session[]
+
+  @@map("user")
+}
+
+model VerificationToken {
+  identifier String @db.VarChar(191)
+  token      String @unique(map: "VerificationToken_token_key") @db.VarChar(191)
+  expires    DateTime
+
+  @@map("verificationtoken")
+  @@unique([identifier, token], map: "VerificationToken_identifier_token_key")
+}

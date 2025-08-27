@@ -1,0 +1,29 @@
+{
+  "name": "theory-26-oauth2-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.10.0",
+    "@prisma/client": "^6.14.0",
+    "axios": "^1.10.0",
+    "jose": "^6.0.12",
+    "jwt-decode": "^4.0.0",
+    "next": "15.4.2",
+    "next-auth": "^4.24.11",
+    "prisma": "^6.14.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
+}
