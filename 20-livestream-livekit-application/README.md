@@ -97,12 +97,13 @@ pnpm dev
 ```
 
 App runs at: `http://localhost:3000`
-
 ---
 
 ## 🛠️ Activity flow
 
-1. User opens **Next.js frontend**.
+1. Open **Next.js frontend**  
+   - Seller: [http://localhost:3000/seller](http://localhost:3000/seller)  
+   - Viewer: [http://localhost:3000/viewer](http://localhost:3000/viewer)
 
 2. Frontend calls backend (`/api/livekit/token`) to request **AccessToken**.
 
@@ -111,3 +112,5 @@ App runs at: `http://localhost:3000`
 4. Frontend uses that token to join LiveKit room.
 
 5. User can **livestream, watch stream, chat realtime** through LiveKit.
+
+
