@@ -1,0 +1,16 @@
+spring:
+    application:
+        name: Livekit-springboot
+
+server:
+    port: 8080
+
+livekit:
+    url: "https://localhost:7880" # project URL (livekit project url)
+    api:
+        key: "devkey"
+        secret: "devsecret"
+
+app:
+    frontend:
+        url: "http://localhost:3000"
