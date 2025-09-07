@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/customer_management_v3?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    format-sql: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:
+            client-secret:
+            scope: openid, email, profile
+            redirect-uri: "http://localhost:8081/api/auth/login/google/callback"
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+            user-name-attribute: sub
+
+app:
+  jwt:
+    issuer: "oauth2-service-v2"
+    access-token-ttl-min: 15
+    refresh-token-ttl-days: 14
+    # path/value private/public key (RSA 2048)
+    private-key-pem: "classpath:keys/private_key.pem"
+    public-key-pem: "classpath:keys/public_key.pem"
+    
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.web.reactive.function.client.ExchangeFunctions: DEBUG
+    org.springframework.security: DEBUG
+    com.likelion: DEBUG
