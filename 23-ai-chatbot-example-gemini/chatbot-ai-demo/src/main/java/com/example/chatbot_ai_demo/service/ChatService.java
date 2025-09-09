@@ -2,6 +2,7 @@ package com.example.chatbot_ai_demo.service;
 
 import com.example.chatbot_ai_demo.dto.ChatRequest;
 import com.example.chatbot_ai_demo.dto.ChatResponse;
+import com.example.chatbot_ai_demo.dto.ProductRequest;
 import com.example.chatbot_ai_demo.entity.Product;
 import com.example.chatbot_ai_demo.repository.ProductRepository;
 import org.springframework.ai.chat.client.ChatClient;
@@ -54,13 +55,13 @@ public class ChatService {
                 .collect(Collectors.joining("\n"));
 
         String prompt = """
-            Bạn là chatbot tư vấn sản phẩm.
-            Dữ liệu sản phẩm hiện có:
-            %s
+                Bạn là chatbot tư vấn sản phẩm.
+                Dữ liệu sản phẩm hiện có:
+                %s
 
-            Người dùng hỏi: %s
-            Trả lời gọn gàng, dễ hiểu, ưu tiên chọn sản phẩm trong danh sách.
-            """.formatted(productInfo, request.message());
+                Người dùng hỏi: %s
+                Trả lời gọn gàng, dễ hiểu, ưu tiên chọn sản phẩm trong danh sách.
+                """.formatted(productInfo, request.message());
 
         String reply = chatClient.prompt()
                 .user(prompt)
@@ -69,5 +70,23 @@ public class ChatService {
 
         return new ChatResponse(reply);
     }
+
+    public boolean isProductAllowed(ProductRequest request) {
+        String prompt = """
+        Bạn là một trợ lý kiểm duyệt sản phẩm. Hãy kiểm tra sản phẩm sau đây có vi phạm pháp luật hoặc thuộc danh mục hàng cấm tại Việt Nam hay không.
+        Tên sản phẩm: %s
+        Mô tả sản phẩm: %s
+        Chỉ trả về "true" nếu sản phẩm được phép, và "false" nếu sản phẩm vi phạm hoặc bị cấm.
+        """.formatted(request.name(), request.description());
+
+        String response = chatClient.prompt()
+                .user(prompt)
+                .call()
+                .content()
+                .trim();
+
+        return Boolean.parseBoolean(response);
+    }
+
 
 }
